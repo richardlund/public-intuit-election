@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+}
+
+project.ext {
+    lombokVersion = '1.18.8'
+    junitVersion = '4.12'
+    hamcrestVersion = '2.1'
+    mockitoVersion = '2.23.4'
+}
+
+group 'intuit.test'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    acceptanceTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/acceptance-test/java')
+        }
+        resources.srcDir file('src/acceptance-test/resources')
+    }
+}
+
+configurations {
+    acceptanceTestCompile.extendsFrom testCompile
+    acceptanceTestRuntime.extendsFrom testRuntime
+    acceptanceTestImplementation.extendsFrom testImplementation
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    testCompile "junit:junit:${junitVersion}"
+
+    testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+}
+
+task acceptanceTest(type: Test) {
+    testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+check.dependsOn(acceptanceTest)
+acceptanceTest.mustRunAfter test

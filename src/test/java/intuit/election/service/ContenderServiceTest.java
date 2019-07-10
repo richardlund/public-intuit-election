@@ -5,12 +5,12 @@ import intuit.election.domain.CitizenToken;
 import intuit.election.domain.Contender;
 import intuit.election.domain.Idea;
 import intuit.election.domain.Manifesto;
+import intuit.election.stub.StubbedCitizenToken;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collection;
@@ -28,19 +28,18 @@ import static org.hamcrest.Matchers.not;
 @RunWith(MockitoJUnitRunner.class)
 public class ContenderServiceTest {
 
-    private static final CitizenToken SOME_NON_CONTENDER_CITIZEN_TOKEN = Mockito.mock(CitizenToken.class);
-    private static final CitizenToken A_CONTENDER_TOKEN = Mockito.mock(CitizenToken.class);
-    private static final CitizenToken ANOTHER_CONTENDER_TOKEN = Mockito.mock(CitizenToken.class);
-    private static final CitizenToken YET_ANOTHER_CONTENDER_TOKEN = Mockito.mock(CitizenToken.class);
+    private static final CitizenToken SOME_NON_CONTENDER_CITIZEN_TOKEN = new StubbedCitizenToken();
+    private static final CitizenToken A_CONTENDER_TOKEN = new StubbedCitizenToken();
+    private static final CitizenToken ANOTHER_CONTENDER_TOKEN = new StubbedCitizenToken();
+    private static final CitizenToken YET_ANOTHER_CONTENDER_TOKEN = new StubbedCitizenToken();
     private static final Citizen A_CONTENDER_CITIZEN = Citizen.of(A_CONTENDER_TOKEN, "some contender name", "somecontender@email.com");
     private static final Citizen ANOTHER_CONTENDER_CITIZEN = Citizen.of(ANOTHER_CONTENDER_TOKEN, "some other contender name", "someothercontender@email.com");
     private static final Citizen YET_ANOTHER_CONTENDER_CITIZEN = Citizen.of(YET_ANOTHER_CONTENDER_TOKEN, "yet another contender name", "yetanothercontender@email.com");
     private static final Manifesto SOME_MANIFESTO = Manifesto.of(Idea.of("some idea"));
     private static final Contender CONTENDER_WITH_MANIFESTO = Contender.of(A_CONTENDER_CITIZEN, SOME_MANIFESTO);
-    private static final Contender ANOTHER_CONTENDER_WITH_MANIFESTO = Contender.of(ANOTHER_CONTENDER_CITIZEN, SOME_MANIFESTO);
-    private static final CitizenToken FIRST_FOLLOWER_TOKEN = Mockito.mock(CitizenToken.class);
-    private static final CitizenToken SECOND_FOLLOWER_TOKEN = Mockito.mock(CitizenToken.class);
-    private static final CitizenToken THIRD_FOLLOWER_TOKEN = Mockito.mock(CitizenToken.class);
+    private static final CitizenToken FIRST_FOLLOWER_TOKEN = new StubbedCitizenToken();
+    private static final CitizenToken SECOND_FOLLOWER_TOKEN = new StubbedCitizenToken();
+    private static final CitizenToken THIRD_FOLLOWER_TOKEN = new StubbedCitizenToken();
     private static final Citizen FIRST_FOLLOWER_CITIZEN = Citizen.of(FIRST_FOLLOWER_TOKEN, "first follower name", "firstfollower@email.com");
     private static final Citizen SECOND_FOLLOWER_CITIZEN = Citizen.of(SECOND_FOLLOWER_TOKEN, "second follower name", "secondfollower@email.com");
     private static final Citizen THIRD_FOLLOWER_CITIZEN = Citizen.of(THIRD_FOLLOWER_TOKEN, "third follower name", "thirdfollower@email.com");
@@ -191,89 +190,4 @@ public class ContenderServiceTest {
 
         assertThat(emailAddressesOfFollowerChain, containsInAnyOrder(FIRST_FOLLOWER_CITIZEN.getEmail(), SECOND_FOLLOWER_CITIZEN.getEmail(), THIRD_FOLLOWER_CITIZEN.getEmail()));
     }
-
-    //    TODO GET THE FOLLOWERS OF FOLLOWER LOGIC TESTED
-//    @Test
-//    public void willGetTheEmailAddressOfASingleFollowerOfAFollowerOfAContender() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.nominate(ANOTHER_CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.startFollowing(FIRST_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(CONTENDER_WITH_MANIFESTO.getCitizen(), ANOTHER_CONTENDER_WITH_MANIFESTO);
-//
-//        Set<String> emailAddressesOfFollowerChain = contenderService.getEmailAddressesOfFollowerChain(ANOTHER_CONTENDER_WITH_MANIFESTO);
-//
-//        assertThat(emailAddressesOfFollowerChain, containsInAnyOrder(FIRST_FOLLOWER_CITIZEN.getEmail(), CONTENDER_WITH_MANIFESTO.getCitizen().getEmail()));
-//    }
-
-    //    @Test
-//    public void willSendAnEmailToASingleFollowerOfAContender() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.startFollowing(FIRST_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//
-//        String someMessageToFollowers = "some message";
-//        contenderService.sendMessageToFollowersOf(CONTENDER_WITH_MANIFESTO, someMessageToFollowers);
-//
-//        verify(mockEmailService).sendMessage(FIRST_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//    }
-//
-//    @Test
-//    public void willSendAnEmailToAMultipleFollowersOfAContender() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.startFollowing(FIRST_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(SECOND_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(THIRD_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//
-//        String someMessageToFollowers = "some message";
-//        contenderService.sendMessageToFollowersOf(CONTENDER_WITH_MANIFESTO, someMessageToFollowers);
-//
-//        verify(mockEmailService).sendMessage(FIRST_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//        verify(mockEmailService).sendMessage(SECOND_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//        verify(mockEmailService).sendMessage(THIRD_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//    }
-//
-//    @Test
-//    public void willSendAnEmailToASingleFollowerOfAFollowerOfAContender() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.nominate(ANOTHER_CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.startFollowing(FIRST_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(CONTENDER_WITH_MANIFESTO.getCitizen(), ANOTHER_CONTENDER_WITH_MANIFESTO);
-//
-//        String someMessageToFollowers = "some message";
-//        contenderService.sendMessageToFollowersOf(ANOTHER_CONTENDER_WITH_MANIFESTO, someMessageToFollowers);
-//
-//        verify(mockEmailService).sendMessage(FIRST_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//        verify(mockEmailService).sendMessage(CONTENDER_WITH_MANIFESTO.getCitizen().getEmail(), someMessageToFollowers);
-//    }
-//
-//    @Test
-//    public void willSendAnEmailToMultipleFollowersOfAFollowerOfAContender() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.nominate(ANOTHER_CONTENDER_WITH_MANIFESTO.getCitizen());
-//        contenderService.startFollowing(FIRST_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(SECOND_FOLLOWER_CITIZEN, CONTENDER_WITH_MANIFESTO);
-//        contenderService.startFollowing(CONTENDER_WITH_MANIFESTO.getCitizen(), ANOTHER_CONTENDER_WITH_MANIFESTO);
-//
-//        String someMessageToFollowers = "some message";
-//        contenderService.sendMessageToFollowersOf(ANOTHER_CONTENDER_WITH_MANIFESTO, someMessageToFollowers);
-//
-//        verify(mockEmailService).sendMessage(FIRST_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//        verify(mockEmailService).sendMessage(SECOND_FOLLOWER_CITIZEN.getEmail(), someMessageToFollowers);
-//        verify(mockEmailService).sendMessage(CONTENDER_WITH_MANIFESTO.getCitizen().getEmail(), someMessageToFollowers);
-//    }
-//
-//    @Test
-//    public void willNotSendAnEmailIfContenderHasNoFollowers() {
-//        ContenderService contenderService = new ContenderService(mockEmailService);
-//
-//        contenderService.nominate(CONTENDER_WITH_MANIFESTO.getCitizen());
-//        String someMessageToFollowers = "some message";
-//        contenderService.sendMessageToFollowersOf(CONTENDER_WITH_MANIFESTO, someMessageToFollowers);
-//
-//        verifyZeroInteractions(mockEmailService);
-//    }
 }

@@ -39,6 +39,7 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
     testCompile "junit:junit:${junitVersion}"
+    testCompile "org.projectlombok:lombok:${lombokVersion}"
 
     testImplementation "org.hamcrest:hamcrest:${hamcrestVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"

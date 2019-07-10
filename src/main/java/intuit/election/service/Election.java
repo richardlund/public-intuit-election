@@ -32,4 +32,8 @@ public interface Election {
     Optional<Rating> getMyRatingFor(CitizenToken ideaRatingCitizen, Idea idea);
 
     boolean iFollow(CitizenToken citizenToken, Contender contender);
+
+    void deleteRatingForIdea(CitizenToken ideaRatingCitizen, Idea ideaOfTheContender);
+
+    Optional<Contender> getContenderWithHighestFinalRating();
 }

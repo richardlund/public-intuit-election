@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Value(staticConstructor = "of")
 public class RatedIdea {
@@ -22,11 +21,11 @@ public class RatedIdea {
         ratings.put(ideaRatingCitizen, rating);
     }
 
-    public void removeRating(CitizenToken ideaRatingCitizen) {
+    public void deleteRating(CitizenToken ideaRatingCitizen) {
         ratings.remove(ideaRatingCitizen);
     }
 
     public Optional<Double> getAverageRating() {
-        return (ratings.isEmpty()) ? Optional.empty() : Optional.of(ratings.values().stream().map(rating->rating.value()).collect(Collectors.toList()).stream().mapToDouble(x->x).average().getAsDouble());
+        return (ratings.isEmpty()) ? Optional.empty() : Optional.of(ratings.values().stream().mapToDouble(Rating::value).average().getAsDouble());
     }
 }

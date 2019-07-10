@@ -6,6 +6,7 @@ import intuit.election.domain.Contender;
 import intuit.election.domain.Idea;
 import intuit.election.domain.Manifesto;
 import intuit.election.domain.Rating;
+import intuit.election.stub.StubbedCitizenToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -170,7 +171,7 @@ public class ElectionServiceTest {
 
         electionService.rateIdea(raterToken, ideaToRate, rating);
 
-        verify(mockRatedIdeaService).rateAnIdea(raterToken, ideaToRate, rating);
+        verify(mockRatedIdeaService).rateIdea(raterToken, ideaToRate, rating);
     }
 
     @Test
@@ -186,7 +187,7 @@ public class ElectionServiceTest {
 
         electionService.rateIdea(raterToken, ideaToRate, rating);
 
-        verify(mockRatedIdeaService).rateAnIdea(raterToken, ideaToRate, rating);
+        verify(mockRatedIdeaService).rateIdea(raterToken, ideaToRate, rating);
         verify(mockContenderService).startFollowing(rater, contender);
     }
 
@@ -200,6 +201,16 @@ public class ElectionServiceTest {
         Rating actualRating = electionService.getMyRatingFor(citizenToken, someIdea).get();
 
         assertThat(actualRating, is(expectedRating));
+    }
+
+    @Test
+    public void ideaRatingDeletionIsDelegatedToRatedIdeaService() {
+        CitizenToken citizenToken = new StubbedCitizenToken();
+        Idea someIdea = Idea.of("someIdea");
+
+        electionService.deleteRatingForIdea(citizenToken, someIdea);
+
+        verify(mockRatedIdeaService).deleteCitizensRatingFor(citizenToken, someIdea);
     }
 
     @Test
@@ -217,6 +228,17 @@ public class ElectionServiceTest {
         assertThat(actualResponse, is(expectedResponse));
     }
 
+    @Test
+    public void retrievalOfContenderWithHighestFinalRatingIsDelegatedToRatedIdeaService() {
+        CitizenToken contenderToken = new StubbedCitizenToken();
+        Contender expectedWinner = aContenderWithAManifesto(contenderToken);
+        when(mockRatedIdeaService.getContenderWithHighestFinalRating()).thenReturn(Optional.of(expectedWinner));
+
+        Contender actualWinner = electionService.getContenderWithHighestFinalRating().get();
+
+        assertThat(actualWinner, is(expectedWinner));
+    }
+
     Contender aContenderWithAManifesto(CitizenToken contenderToken) {
         Citizen citizen = Citizen.of(contenderToken, SOME_CITIZEN_NAME, SOME_CITIZEN_EMAIL);
         Manifesto manifesto = Manifesto.of(Idea.of("someIdea"));
@@ -224,6 +246,4 @@ public class ElectionServiceTest {
         when(mockContenderService.getContender(contenderToken)).thenReturn(Optional.of(contender));
         return contender;
     }
-
-    private class StubbedCitizenToken implements CitizenToken{}
 }

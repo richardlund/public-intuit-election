@@ -15,6 +15,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Package private as this service is not intended to be used outside this package
+ */
 class ContenderService {
 
     private static final String NOT_A_CONTENDER_MSG = "Citizen is not a nominated contender";

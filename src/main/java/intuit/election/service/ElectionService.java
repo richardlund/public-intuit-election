@@ -75,7 +75,7 @@ public class ElectionService implements Election {
 
     @Override
     public void rateIdea(CitizenToken citizenTokenOfRater, Idea idea, Rating rating) {
-        ratedIdeaService.rateAnIdea(citizenTokenOfRater, idea, rating);
+        ratedIdeaService.rateIdea(citizenTokenOfRater, idea, rating);
         if (rating.value()>= MINIMUM_FOLLOWER_RATING) {
             Citizen rater = getRegisteredCitizen(citizenTokenOfRater).get();
             Contender contender = ratedIdeaService.getIdeaPublisher(idea).get();
@@ -91,5 +91,15 @@ public class ElectionService implements Election {
     @Override
     public boolean iFollow(CitizenToken citizenToken, Contender contender) {
         return contenderService.isFollowerOf(getRegisteredCitizen(citizenToken).get(), contender);
+    }
+
+    @Override
+    public void deleteRatingForIdea(CitizenToken ideaRatingCitizen, Idea ideaOfTheContender) {
+        ratedIdeaService.deleteCitizensRatingFor(ideaRatingCitizen, ideaOfTheContender);
+    }
+
+    @Override
+    public Optional<Contender> getContenderWithHighestFinalRating() {
+        return ratedIdeaService.getContenderWithHighestFinalRating();
     }
 }
